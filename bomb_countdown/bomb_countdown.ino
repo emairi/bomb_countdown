@@ -157,10 +157,6 @@ void setup() {
 
 void loop() {
 
-// put your main code here, to run repeatedly:
-
-
-  // checks if there is button input and turns lights on
   int button = check_buttons();
   update_countdown_timer();
 
@@ -173,24 +169,14 @@ void loop() {
   {
     turn_off_lights();
     bomb_explosion();
-
   }
   
-
   if ((user_attempt.remaining_input) == 0){
     // check if the code is correct
     if (is_code_correct())
     {
-      // decoded
-      // celebration!!
       defused_bomb_sound();
-      
-      while(true)
-      {
-
-      }
-
-      //something
+      while(true){}
     }
     else // code is wrong
     {
@@ -199,18 +185,19 @@ void loop() {
       turn_off_lights();
       reset_digits();
       delay(200);
-      // make annoying noise
     }
 
   }
   
 
-}
+} // end loop
 
 
-// Helper functions
 
-// setup/initialisation
+/***********************************************************************
+ * Secret code
+ ***********************************************************************/
+
 
 void setup_bomb()
 {
@@ -230,6 +217,19 @@ bool is_code_correct()
   }
   return true;
 }
+
+
+void enter_digit(char which_button)
+{
+  char digit_location = CODE_LENGTH - (user_attempt.remaining_input);
+  user_attempt.code[digit_location] = which_button;
+  user_attempt.button_pressed[which_button] = true;
+  (user_attempt.remaining_input)--;  
+}
+
+/***********************************************************************
+ * LED and buttons
+ ***********************************************************************/
 
 void setup_buttons_leds()
 {
@@ -279,15 +279,6 @@ void handle_button(char button)
     turn_on_light(button);
   }
   
-}
-
-
-void enter_digit(char which_button)
-{
-  char digit_location = CODE_LENGTH - (user_attempt.remaining_input);
-  user_attempt.code[digit_location] = which_button;
-  user_attempt.button_pressed[which_button] = true;
-  (user_attempt.remaining_input)--;  
 }
 
 void reset_digits()
@@ -340,7 +331,7 @@ void turn_on_light(char light)
 
 
 /***********************************************************************
- * Display Stuff
+ * Display Setup
  ***********************************************************************/
 static volatile unsigned char display_segment_state[4]; /* zero */
 
@@ -492,6 +483,12 @@ bool countdown_timer_expired()
 {
   return countdown_time_remaining == 0;
 }
+
+
+
+/***********************************************************************
+ * Piezo buzzer sounds
+ ***********************************************************************/
 
 // notes in the melody:
 int melody[] = {
